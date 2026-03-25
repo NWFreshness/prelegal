@@ -28,9 +28,10 @@ export default function NdaForm({ data, onChange }: Props) {
 
         <div className="space-y-5">
           <div>
-            <label className={labelClass}>Purpose</label>
+            <label htmlFor="purpose" className={labelClass}>Purpose</label>
             <p className={hintClass}>How Confidential Information may be used</p>
             <textarea
+              id="purpose"
               value={data.purpose}
               onChange={(e) => update('purpose', e.target.value)}
               className={inputClass}
@@ -40,8 +41,9 @@ export default function NdaForm({ data, onChange }: Props) {
           </div>
 
           <div>
-            <label className={labelClass}>Effective Date</label>
+            <label htmlFor="effectiveDate" className={labelClass}>Effective Date</label>
             <input
+              id="effectiveDate"
               type="date"
               value={data.effectiveDate}
               onChange={(e) => update('effectiveDate', e.target.value)}
@@ -57,6 +59,7 @@ export default function NdaForm({ data, onChange }: Props) {
               <label className="flex items-center gap-2 text-sm">
                 <input
                   type="radio"
+                  data-testid="mnda-expires-radio"
                   name="mndaTermType"
                   checked={data.mndaTermType === 'expires'}
                   onChange={() => update('mndaTermType', 'expires')}
@@ -65,6 +68,7 @@ export default function NdaForm({ data, onChange }: Props) {
                 Expires after&nbsp;
                 <input
                   type="number"
+                  aria-label="MNDA term years"
                   value={data.mndaTermYears}
                   onChange={(e) => update('mndaTermYears', Math.max(1, parseInt(e.target.value) || 1))}
                   min={1}
@@ -77,6 +81,7 @@ export default function NdaForm({ data, onChange }: Props) {
               <label className="flex items-center gap-2 text-sm">
                 <input
                   type="radio"
+                  data-testid="mnda-continues-radio"
                   name="mndaTermType"
                   checked={data.mndaTermType === 'continues'}
                   onChange={() => update('mndaTermType', 'continues')}
@@ -93,12 +98,14 @@ export default function NdaForm({ data, onChange }: Props) {
               <label className="flex items-center gap-2 text-sm">
                 <input
                   type="radio"
+                  data-testid="confidentiality-years-radio"
                   name="confidentialityTermType"
                   checked={data.confidentialityTermType === 'years'}
                   onChange={() => update('confidentialityTermType', 'years')}
                 />
                 <input
                   type="number"
+                  aria-label="Confidentiality term years"
                   value={data.confidentialityTermYears}
                   onChange={(e) =>
                     update('confidentialityTermYears', Math.max(1, parseInt(e.target.value) || 1))
@@ -113,6 +120,7 @@ export default function NdaForm({ data, onChange }: Props) {
               <label className="flex items-center gap-2 text-sm">
                 <input
                   type="radio"
+                  data-testid="confidentiality-perpetuity-radio"
                   name="confidentialityTermType"
                   checked={data.confidentialityTermType === 'perpetuity'}
                   onChange={() => update('confidentialityTermType', 'perpetuity')}
@@ -124,9 +132,10 @@ export default function NdaForm({ data, onChange }: Props) {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className={labelClass}>Governing Law</label>
+              <label htmlFor="governingLaw" className={labelClass}>Governing Law</label>
               <p className={hintClass}>State (e.g., Delaware)</p>
               <input
+                id="governingLaw"
                 type="text"
                 value={data.governingLaw}
                 onChange={(e) => update('governingLaw', e.target.value)}
@@ -136,9 +145,10 @@ export default function NdaForm({ data, onChange }: Props) {
               />
             </div>
             <div>
-              <label className={labelClass}>Jurisdiction</label>
+              <label htmlFor="jurisdiction" className={labelClass}>Jurisdiction</label>
               <p className={hintClass}>City/county and state</p>
               <input
+                id="jurisdiction"
                 type="text"
                 value={data.jurisdiction}
                 onChange={(e) => update('jurisdiction', e.target.value)}
@@ -150,8 +160,11 @@ export default function NdaForm({ data, onChange }: Props) {
           </div>
 
           <div>
-            <label className={labelClass}>MNDA Modifications <span className="text-gray-400 font-normal">(optional)</span></label>
+            <label htmlFor="modifications" className={labelClass}>
+              MNDA Modifications <span className="text-gray-400 font-normal">(optional)</span>
+            </label>
             <textarea
+              id="modifications"
               value={data.modifications}
               onChange={(e) => update('modifications', e.target.value)}
               placeholder="List any modifications to the standard terms..."
@@ -167,20 +180,21 @@ export default function NdaForm({ data, onChange }: Props) {
         <h2 className="text-base font-semibold text-gray-900 mb-5 pb-3 border-b border-gray-100">Party 1</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className={labelClass}>Company Name</label>
-            <input type="text" value={data.party1Company} onChange={(e) => update('party1Company', e.target.value)} className={inputClass} required />
+            <label htmlFor="party1Company" className={labelClass}>Company Name</label>
+            <input id="party1Company" type="text" value={data.party1Company} onChange={(e) => update('party1Company', e.target.value)} className={inputClass} required />
           </div>
           <div>
-            <label className={labelClass}>Signatory Name</label>
-            <input type="text" value={data.party1Name} onChange={(e) => update('party1Name', e.target.value)} className={inputClass} required />
+            <label htmlFor="party1Name" className={labelClass}>Signatory Name</label>
+            <input id="party1Name" type="text" value={data.party1Name} onChange={(e) => update('party1Name', e.target.value)} className={inputClass} required />
           </div>
           <div>
-            <label className={labelClass}>Title</label>
-            <input type="text" value={data.party1Title} onChange={(e) => update('party1Title', e.target.value)} className={inputClass} required />
+            <label htmlFor="party1Title" className={labelClass}>Title</label>
+            <input id="party1Title" type="text" value={data.party1Title} onChange={(e) => update('party1Title', e.target.value)} className={inputClass} required />
           </div>
           <div>
-            <label className={labelClass}>Notice Address</label>
+            <label htmlFor="party1Address" className={labelClass}>Notice Address</label>
             <input
+              id="party1Address"
               type="text"
               value={data.party1Address}
               onChange={(e) => update('party1Address', e.target.value)}
@@ -197,20 +211,21 @@ export default function NdaForm({ data, onChange }: Props) {
         <h2 className="text-base font-semibold text-gray-900 mb-5 pb-3 border-b border-gray-100">Party 2</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className={labelClass}>Company Name</label>
-            <input type="text" value={data.party2Company} onChange={(e) => update('party2Company', e.target.value)} className={inputClass} required />
+            <label htmlFor="party2Company" className={labelClass}>Company Name</label>
+            <input id="party2Company" type="text" value={data.party2Company} onChange={(e) => update('party2Company', e.target.value)} className={inputClass} required />
           </div>
           <div>
-            <label className={labelClass}>Signatory Name</label>
-            <input type="text" value={data.party2Name} onChange={(e) => update('party2Name', e.target.value)} className={inputClass} required />
+            <label htmlFor="party2Name" className={labelClass}>Signatory Name</label>
+            <input id="party2Name" type="text" value={data.party2Name} onChange={(e) => update('party2Name', e.target.value)} className={inputClass} required />
           </div>
           <div>
-            <label className={labelClass}>Title</label>
-            <input type="text" value={data.party2Title} onChange={(e) => update('party2Title', e.target.value)} className={inputClass} required />
+            <label htmlFor="party2Title" className={labelClass}>Title</label>
+            <input id="party2Title" type="text" value={data.party2Title} onChange={(e) => update('party2Title', e.target.value)} className={inputClass} required />
           </div>
           <div>
-            <label className={labelClass}>Notice Address</label>
+            <label htmlFor="party2Address" className={labelClass}>Notice Address</label>
             <input
+              id="party2Address"
               type="text"
               value={data.party2Address}
               onChange={(e) => update('party2Address', e.target.value)}
@@ -221,7 +236,6 @@ export default function NdaForm({ data, onChange }: Props) {
           </div>
         </div>
       </section>
-
     </div>
   )
 }
