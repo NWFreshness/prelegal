@@ -5,7 +5,6 @@ import { NdaFormData } from '@/lib/types'
 interface Props {
   data: NdaFormData
   onChange: (data: NdaFormData) => void
-  onSubmit: () => void
 }
 
 const inputClass =
@@ -14,13 +13,13 @@ const inputClass =
 const labelClass = 'block text-sm font-medium text-gray-700 mb-1'
 const hintClass = 'text-xs text-gray-500 mb-1'
 
-export default function NdaForm({ data, onChange, onSubmit }: Props) {
+export default function NdaForm({ data, onChange }: Props) {
   const update = <K extends keyof NdaFormData>(field: K, value: NdaFormData[K]) => {
     onChange({ ...data, [field]: value })
   }
 
   return (
-    <form onSubmit={(e) => { e.preventDefault(); onSubmit() }} className="space-y-6">
+    <div className="space-y-6">
       {/* Agreement Details */}
       <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
         <h2 className="text-base font-semibold text-gray-900 mb-5 pb-3 border-b border-gray-100">
@@ -223,14 +222,6 @@ export default function NdaForm({ data, onChange, onSubmit }: Props) {
         </div>
       </section>
 
-      <div className="flex justify-end pb-4">
-        <button
-          type="submit"
-          className="bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-800 transition-colors shadow-sm"
-        >
-          Preview Document →
-        </button>
-      </div>
-    </form>
+    </div>
   )
 }
