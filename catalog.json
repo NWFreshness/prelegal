@@ -1,0 +1,62 @@
+[
+  {
+    "name": "Mutual NDA Cover Page",
+    "description": "Cover page for the Common Paper Mutual Non-Disclosure Agreement. Used alongside the Mutual-NDA standard terms to form an executed agreement.",
+    "filename": "templates/Mutual-NDA-coverpage.md"
+  },
+  {
+    "name": "Mutual Non-Disclosure Agreement (NDA)",
+    "description": "Standard terms for the Common Paper Mutual NDA, created by a committee of over 40 attorneys. A balanced, bilateral confidentiality agreement for technology companies.",
+    "filename": "templates/Mutual-NDA.md"
+  },
+  {
+    "name": "Cloud Service Agreement (CSA)",
+    "description": "Standard terms for the Common Paper Cloud Service Agreement — an easy agreement for selling and buying cloud software and SaaS products.",
+    "filename": "templates/CSA.md"
+  },
+  {
+    "name": "Design Partner Agreement",
+    "description": "Standard terms for the Common Paper Design Partner Agreement, used when a company engages a design partner to provide feedback on an early-stage product.",
+    "filename": "templates/design-partner-agreement.md"
+  },
+  {
+    "name": "Service Level Agreement (SLA)",
+    "description": "Standard terms for the Common Paper Service Level Agreement, designed to be used alongside the Cloud Service Agreement (CSA) to define uptime and support commitments.",
+    "filename": "templates/sla.md"
+  },
+  {
+    "name": "Professional Services Agreement (PSA)",
+    "description": "Standard terms for the Common Paper Professional Services Agreement, covering the delivery of professional or consulting services including statements of work and deliverables.",
+    "filename": "templates/psa.md"
+  },
+  {
+    "name": "Data Processing Agreement (DPA)",
+    "description": "Standard terms for the Common Paper Data Processing Agreement, addressing GDPR and data protection obligations between a data controller and data processor.",
+    "filename": "templates/DPA.md"
+  },
+  {
+    "name": "Partnership Agreement",
+    "description": "Standard terms for the Common Paper Partnership Agreement, used to establish the terms of a commercial partnership between two companies.",
+    "filename": "templates/Partnership-Agreement.md"
+  },
+  {
+    "name": "Software License Agreement",
+    "description": "Standard terms for the Common Paper Software License Agreement, covering on-premise or downloadable software licensing including usage rights and restrictions.",
+    "filename": "templates/Software-License-Agreement.md"
+  },
+  {
+    "name": "Pilot Agreement",
+    "description": "Standard terms for the Common Paper Pilot Agreement, a short-term contract that allows a prospective customer to trial a product or service before committing to a full commercial agreement.",
+    "filename": "templates/Pilot-Agreement.md"
+  },
+  {
+    "name": "Business Associate Agreement (BAA)",
+    "description": "Standard terms for the Common Paper Business Associate Agreement, a HIPAA-required contract between a covered entity and a business associate that handles protected health information.",
+    "filename": "templates/BAA.md"
+  },
+  {
+    "name": "AI Addendum",
+    "description": "Standard terms for the Common Paper AI Addendum, an addendum to a commercial agreement that addresses obligations and restrictions specific to AI-powered products and services.",
+    "filename": "templates/AI-Addendum.md"
+  }
+]
