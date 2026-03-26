@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git:*)",
+      "mcp__github__issue_write",
+      "mcp__github__create_pull_request",
+      "mcp__atlassian__getAccessibleAtlassianResources",
+      "mcp__atlassian__getJiraIssue",
+      "mcp__github__search_repositories",
+      "Bash(python3 -c \"import json,sys; data=json.load\\(sys.stdin\\); items=json.loads\\(data[0][''''text'''']\\)[''''items'''']; [print\\(i[''''name'''']\\) for i in items]\")",
+      "mcp__github__get_file_contents",
+      "Bash(cd:*)"
+    ]
+  }
+}
