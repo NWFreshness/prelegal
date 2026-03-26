@@ -1,3 +1,5 @@
+export type DocumentFields = Record<string, unknown>
+
 export interface NdaFormData {
   purpose: string
   effectiveDate: string
