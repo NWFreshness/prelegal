@@ -16,8 +16,9 @@ describe('NDA Creator page', () => {
     expect(screen.getByText('Prelegal')).toBeInTheDocument()
   })
 
-  it('renders the Details panel label', () => {
-    expect(screen.getByText('Details')).toBeInTheDocument()
+  it('renders Chat and Edit Form tabs', () => {
+    expect(screen.getByText('Chat')).toBeInTheDocument()
+    expect(screen.getByText('Edit Form')).toBeInTheDocument()
   })
 
   it('renders the Preview panel label', () => {
@@ -28,12 +29,19 @@ describe('NDA Creator page', () => {
     expect(screen.getByText('Print / Download PDF')).toBeInTheDocument()
   })
 
-  it('renders the form and the document simultaneously', () => {
-    // Form sections
+  it('defaults to the Chat tab with chat assistant visible', () => {
+    expect(screen.getByText('NDA Chat Assistant')).toBeInTheDocument()
+  })
+
+  it('shows the form when Edit Form tab is clicked', async () => {
+    const user = userEvent.setup()
+    await user.click(screen.getByText('Edit Form'))
     expect(screen.getByText('Agreement Details')).toBeInTheDocument()
     expect(screen.getByText('Party 1')).toBeInTheDocument()
     expect(screen.getByText('Party 2')).toBeInTheDocument()
-    // Document (rendered twice: split-pane preview + hidden print div)
+  })
+
+  it('renders the document preview alongside chat', () => {
     expect(screen.getAllByText('Mutual Non-Disclosure Agreement').length).toBeGreaterThan(0)
     expect(screen.getAllByText('Standard Terms').length).toBeGreaterThan(0)
   })
@@ -43,7 +51,9 @@ describe('NDA Creator page', () => {
     expect(window.print).toHaveBeenCalledTimes(1)
   })
 
-  it("sets today's date as effectiveDate on mount", () => {
+  it("sets today's date as effectiveDate on mount", async () => {
+    const user = userEvent.setup()
+    await user.click(screen.getByText('Edit Form'))
     const today = new Date().toISOString().split('T')[0]
     const dateInput = screen.getByLabelText('Effective Date') as HTMLInputElement
     expect(dateInput.value).toBe(today)
@@ -51,17 +61,18 @@ describe('NDA Creator page', () => {
 
   // ── Live preview ──────────────────────────────────────────────────────────
 
-  it('updates the document preview when governing law is typed', async () => {
+  it('updates the document preview when governing law is typed in Edit Form', async () => {
     const user = userEvent.setup()
+    await user.click(screen.getByText('Edit Form'))
     const govLawInput = screen.getByLabelText('Governing Law')
     await user.type(govLawInput, 'California')
-    // 'California' should now appear in the document preview (clause 9 and cover table)
     const matches = screen.getAllByText('California')
     expect(matches.length).toBeGreaterThan(0)
   })
 
   it('updates the document preview when Party 1 company name is typed', async () => {
     const user = userEvent.setup()
+    await user.click(screen.getByText('Edit Form'))
     await user.type(screen.getAllByLabelText('Company Name')[0], 'Acme Corp')
     expect(screen.getAllByText('Acme Corp').length).toBeGreaterThan(0)
   })
