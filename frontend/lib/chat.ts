@@ -1,4 +1,4 @@
-import { NdaFormData } from './types'
+import { DocumentFields } from './types'
 
 export interface ChatMessage {
   role: 'user' | 'assistant'
@@ -7,17 +7,26 @@ export interface ChatMessage {
 
 export interface ChatResponse {
   reply: string
-  fields: Partial<NdaFormData>
+  fields: DocumentFields
+  document_type: string | null
 }
 
 const API_URL = 'http://localhost:8001/api/chat'
-const STORAGE_KEY = 'prelegal-chat-nda-v1'
 
-export async function sendMessage(messages: ChatMessage[]): Promise<ChatResponse> {
+function storageKey(documentType: string | null): string {
+  if (!documentType) return 'prelegal-chat-v2-selection'
+  const slug = documentType.toLowerCase().replace(/[^a-z0-9]+/g, '-')
+  return `prelegal-chat-v2-${slug}`
+}
+
+export async function sendMessage(
+  messages: ChatMessage[],
+  documentType: string | null,
+): Promise<ChatResponse> {
   const res = await fetch(API_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ messages }),
+    body: JSON.stringify({ messages, document_type: documentType }),
   })
   if (!res.ok) {
     throw new Error(`Chat API error: ${res.status}`)
@@ -25,22 +34,22 @@ export async function sendMessage(messages: ChatMessage[]): Promise<ChatResponse
   return res.json()
 }
 
-export function loadMessages(): ChatMessage[] {
+export function loadMessages(documentType: string | null): ChatMessage[] {
   if (typeof window === 'undefined') return []
   try {
-    const raw = localStorage.getItem(STORAGE_KEY)
+    const raw = localStorage.getItem(storageKey(documentType))
     return raw ? JSON.parse(raw) : []
   } catch {
     return []
   }
 }
 
-export function saveMessages(messages: ChatMessage[]) {
+export function saveMessages(messages: ChatMessage[], documentType: string | null) {
   if (typeof window === 'undefined') return
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(messages))
+  localStorage.setItem(storageKey(documentType), JSON.stringify(messages))
 }
 
-export function clearStoredMessages() {
+export function clearStoredMessages(documentType: string | null) {
   if (typeof window === 'undefined') return
-  localStorage.removeItem(STORAGE_KEY)
+  localStorage.removeItem(storageKey(documentType))
 }
