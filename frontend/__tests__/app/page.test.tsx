@@ -1,12 +1,12 @@
 import { render, screen, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import Home from '@/app/page'
+import NdaCreatorPage from '@/app/nda-creator/page'
 
-describe('Home page', () => {
+describe('NDA Creator page', () => {
   beforeEach(async () => {
     jest.clearAllMocks()
     await act(async () => {
-      render(<Home />)
+      render(<NdaCreatorPage />)
     })
   })
 
@@ -33,9 +33,9 @@ describe('Home page', () => {
     expect(screen.getByText('Agreement Details')).toBeInTheDocument()
     expect(screen.getByText('Party 1')).toBeInTheDocument()
     expect(screen.getByText('Party 2')).toBeInTheDocument()
-    // Document
-    expect(screen.getByText('Mutual Non-Disclosure Agreement')).toBeInTheDocument()
-    expect(screen.getByText('Standard Terms')).toBeInTheDocument()
+    // Document (rendered twice: split-pane preview + hidden print div)
+    expect(screen.getAllByText('Mutual Non-Disclosure Agreement').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('Standard Terms').length).toBeGreaterThan(0)
   })
 
   it('calls window.print when Print / Download PDF is clicked', () => {
