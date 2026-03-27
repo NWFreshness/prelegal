@@ -1,3 +1,4 @@
+import { apiFetch } from './api'
 import { NdaFormData } from './types'
 
 export interface ChatMessage {
@@ -10,13 +11,11 @@ export interface ChatResponse {
   fields: Partial<NdaFormData>
 }
 
-const API_URL = 'http://localhost:8001/api/chat'
 const STORAGE_KEY = 'prelegal-chat-nda-v1'
 
 export async function sendMessage(messages: ChatMessage[]): Promise<ChatResponse> {
-  const res = await fetch(API_URL, {
+  const res = await apiFetch('/api/chat', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ messages }),
   })
   if (!res.ok) {

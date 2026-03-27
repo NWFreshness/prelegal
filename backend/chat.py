@@ -3,9 +3,12 @@
 import json
 import os
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from openai import OpenAI
 from pydantic import BaseModel
+
+from auth import get_current_user
+from models import User
 
 from prompts import build_system_prompt
 
@@ -40,7 +43,7 @@ class ChatResponse(BaseModel):
 
 
 @router.post("/api/chat", response_model=ChatResponse)
-def chat(request: ChatRequest):
+def chat(request: ChatRequest, _: User = Depends(get_current_user)):
     openai_messages = [
         {"role": "system", "content": build_system_prompt()},
     ]

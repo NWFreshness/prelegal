@@ -1,3 +1,5 @@
+import os
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
@@ -20,5 +22,8 @@ def get_db():
 
 
 def init_db():
-    from models import User  # noqa: F401 — ensures table is registered
+    # Reset DB on every startup (ephemeral per spec)
+    if os.path.exists("./prelegal.db"):
+        os.remove("./prelegal.db")
+    from models import User, Document  # noqa: F401 — registers tables
     Base.metadata.create_all(bind=engine)

@@ -106,7 +106,7 @@ export default function ChatPane({ onFieldsUpdate }: Props) {
             <div
               className={`max-w-[85%] rounded-lg px-4 py-2.5 text-sm leading-relaxed whitespace-pre-wrap ${
                 msg.role === 'user'
-                  ? 'bg-[#209dd7] text-white'
+                  ? 'bg-brand-blue text-white'
                   : 'bg-white border border-gray-200 text-gray-800'
               }`}
             >
@@ -142,7 +142,7 @@ export default function ChatPane({ onFieldsUpdate }: Props) {
           <button
             onClick={handleSend}
             disabled={loading || !input.trim()}
-            className="bg-[#753991] text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-[#652d80] transition-colors disabled:opacity-50 disabled:cursor-not-allowed self-end"
+            className="bg-brand-purple text-white px-4 py-2 rounded-md text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed self-end"
           >
             Send
           </button>
