@@ -1,4 +1,4 @@
-"""Chat endpoint for AI-assisted NDA drafting."""
+"""Chat endpoint for AI-assisted legal document drafting."""
 
 import json
 import os
@@ -6,6 +6,7 @@ import os
 from fastapi import APIRouter, Depends
 from openai import OpenAI
 from pydantic import BaseModel
+from typing import Literal
 
 from auth import get_current_user
 from models import User
@@ -16,17 +17,6 @@ router = APIRouter()
 
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
-VALID_FIELDS = {
-    "purpose", "effectiveDate", "mndaTermType", "mndaTermYears",
-    "confidentialityTermType", "confidentialityTermYears",
-    "governingLaw", "jurisdiction", "modifications",
-    "party1Company", "party1Name", "party1Title", "party1Address",
-    "party2Company", "party2Name", "party2Title", "party2Address",
-}
-
-
-from typing import Literal
-
 
 class Message(BaseModel):
     role: Literal["user", "assistant"]
@@ -35,17 +25,21 @@ class Message(BaseModel):
 
 class ChatRequest(BaseModel):
     messages: list[Message]
+    document_type: str | None = None
 
 
 class ChatResponse(BaseModel):
     reply: str
     fields: dict
+    document_type: str | None = None
 
 
 @router.post("/api/chat", response_model=ChatResponse)
 def chat(request: ChatRequest, _: User = Depends(get_current_user)):
+    system_prompt = build_system_prompt(request.document_type)
+
     openai_messages = [
-        {"role": "system", "content": build_system_prompt()},
+        {"role": "system", "content": system_prompt},
     ]
     for msg in request.messages:
         openai_messages.append({"role": msg.role, "content": msg.content})
@@ -64,21 +58,11 @@ def chat(request: ChatRequest, _: User = Depends(get_current_user)):
         return ChatResponse(
             reply="Sorry, I had trouble processing that. Could you try again?",
             fields={},
+            document_type=request.document_type,
         )
 
     reply = parsed.get("reply", "")
-    raw_fields = parsed.get("fields", {})
+    fields = parsed.get("fields", {})
+    document_type = parsed.get("document_type", request.document_type)
 
-    # Only allow known NDA fields through
-    fields = {k: v for k, v in raw_fields.items() if k in VALID_FIELDS}
-
-    # Coerce integer fields the LLM may return as strings
-    INT_FIELDS = {"mndaTermYears", "confidentialityTermYears"}
-    for k in INT_FIELDS:
-        if k in fields:
-            try:
-                fields[k] = int(fields[k])
-            except (ValueError, TypeError):
-                del fields[k]
-
-    return ChatResponse(reply=reply, fields=fields)
+    return ChatResponse(reply=reply, fields=fields, document_type=document_type)

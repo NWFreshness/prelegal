@@ -4,34 +4,8 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { apiFetch } from '@/lib/api'
+import { catalog } from '@/lib/catalog'
 import DocumentHistory from '@/components/DocumentHistory'
-
-const TOOLS = [
-  {
-    title: 'Mutual NDA Creator',
-    description: 'Draft a Mutual Non-Disclosure Agreement with key terms filled in via AI chat.',
-    href: '/nda-creator',
-    available: true,
-  },
-  {
-    title: 'Cloud Service Agreement',
-    description: 'Generate a Cloud Service Agreement for SaaS products.',
-    href: '#',
-    available: false,
-  },
-  {
-    title: 'Professional Services Agreement',
-    description: 'Create a Professional Services Agreement for consulting engagements.',
-    href: '#',
-    available: false,
-  },
-  {
-    title: 'Data Processing Agreement',
-    description: 'Prepare a GDPR-compliant Data Processing Agreement.',
-    href: '#',
-    available: false,
-  },
-]
 
 export default function DashboardPage() {
   const router = useRouter()
@@ -79,28 +53,22 @@ export default function DashboardPage() {
           <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">
             Legal Tools
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {TOOLS.map((tool) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {catalog.map((entry) => (
               <div
-                key={tool.title}
-                className={`bg-white rounded-xl border border-gray-200 p-5 flex flex-col gap-3 shadow-sm transition-shadow hover:shadow-md ${
-                  !tool.available ? 'opacity-50' : ''
-                }`}
+                key={entry.name}
+                className="bg-white rounded-xl border border-gray-200 p-5 flex flex-col gap-3 shadow-sm transition-shadow hover:shadow-md"
               >
                 <div className="flex-1">
-                  <h3 className="font-semibold text-brand-navy text-sm">{tool.title}</h3>
-                  <p className="text-gray-500 text-xs mt-1.5 leading-relaxed">{tool.description}</p>
+                  <h3 className="font-semibold text-brand-navy text-sm">{entry.name}</h3>
+                  <p className="text-gray-500 text-xs mt-1.5 leading-relaxed">{entry.description}</p>
                 </div>
-                {tool.available ? (
-                  <Link
-                    href={tool.href}
-                    className="text-xs font-semibold text-brand-blue hover:underline"
-                  >
-                    Open →
-                  </Link>
-                ) : (
-                  <span className="text-xs text-gray-400">Coming soon</span>
-                )}
+                <Link
+                  href={`/document-creator?type=${encodeURIComponent(entry.name)}`}
+                  className="text-xs font-semibold text-brand-blue hover:underline"
+                >
+                  Open →
+                </Link>
               </div>
             ))}
           </div>

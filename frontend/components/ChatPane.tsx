@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { NdaFormData } from '@/lib/types'
+import { DocumentFields } from '@/lib/types'
 import {
   ChatMessage,
   sendMessage,
@@ -11,25 +11,31 @@ import {
 } from '@/lib/chat'
 
 interface Props {
-  onFieldsUpdate: (fields: Partial<NdaFormData>) => void
+  documentType: string | null
+  onFieldsUpdate: (fields: DocumentFields, documentType: string | null) => void
 }
 
-export default function ChatPane({ onFieldsUpdate }: Props) {
+export default function ChatPane({ documentType, onFieldsUpdate }: Props) {
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
-  // Hydrate from localStorage on mount
   useEffect(() => {
-    setMessages(loadMessages())
-  }, [])
+    setMessages(loadMessages(documentType))
+  }, [documentType])
 
-  // Scroll to bottom on new messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
+
+  // Auto-focus the textarea on mount and when loading completes
+  useEffect(() => {
+    if (!loading) {
+      textareaRef.current?.focus()
+    }
+  }, [loading])
 
   async function handleSend() {
     const text = input.trim()
@@ -38,23 +44,21 @@ export default function ChatPane({ onFieldsUpdate }: Props) {
     const userMessage: ChatMessage = { role: 'user', content: text }
     const updated = [...messages, userMessage]
     setMessages(updated)
-    saveMessages(updated)
+    saveMessages(updated, documentType)
     setInput('')
     setLoading(true)
 
     try {
-      const response = await sendMessage(updated)
+      const response = await sendMessage(updated, documentType)
       const assistantMessage: ChatMessage = {
         role: 'assistant',
         content: response.reply,
       }
       const withReply = [...updated, assistantMessage]
       setMessages(withReply)
-      saveMessages(withReply)
+      saveMessages(withReply, documentType)
 
-      if (response.fields && Object.keys(response.fields).length > 0) {
-        onFieldsUpdate(response.fields)
-      }
+      onFieldsUpdate(response.fields ?? {}, response.document_type)
     } catch {
       const errorMessage: ChatMessage = {
         role: 'assistant',
@@ -62,16 +66,15 @@ export default function ChatPane({ onFieldsUpdate }: Props) {
       }
       const withError = [...updated, errorMessage]
       setMessages(withError)
-      saveMessages(withError)
+      saveMessages(withError, documentType)
     } finally {
       setLoading(false)
-      textareaRef.current?.focus()
     }
   }
 
   function handleClear() {
     setMessages([])
-    clearStoredMessages()
+    clearStoredMessages(documentType)
   }
 
   function handleKeyDown(e: React.KeyboardEvent) {
@@ -81,6 +84,16 @@ export default function ChatPane({ onFieldsUpdate }: Props) {
     }
   }
 
+  const welcomeTitle = documentType
+    ? `${documentType} Assistant`
+    : 'Legal Document Assistant'
+  const welcomeText = documentType
+    ? `Tell me about the ${documentType} you need and I'll help you fill it out.`
+    : 'Tell me what kind of legal document you need and I\'ll help you get started.'
+  const placeholder = documentType
+    ? `Describe your ${documentType} needs...`
+    : 'What legal document do you need?'
+
   return (
     <div className="flex flex-col h-full">
       {/* Messages */}
@@ -88,13 +101,9 @@ export default function ChatPane({ onFieldsUpdate }: Props) {
         {messages.length === 0 && (
           <div className="text-center text-gray-400 mt-12 px-4">
             <p className="text-lg font-medium text-gray-500 mb-2">
-              NDA Chat Assistant
+              {welcomeTitle}
             </p>
-            <p className="text-sm">
-              Tell me about the NDA you need and I will help you fill it out.
-              For example: &quot;I need an NDA between Acme Corp and Beta Inc
-              for a potential partnership.&quot;
-            </p>
+            <p className="text-sm">{welcomeText}</p>
           </div>
         )}
 
@@ -134,7 +143,7 @@ export default function ChatPane({ onFieldsUpdate }: Props) {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Describe your NDA needs..."
+            placeholder={placeholder}
             rows={2}
             disabled={loading}
             className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none disabled:bg-gray-50"
