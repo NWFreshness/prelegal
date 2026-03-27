@@ -5,7 +5,7 @@ const PUBLIC_PATHS = ['/login']
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
-  const isAuthenticated = request.cookies.has('prelegal-auth')
+  const isAuthenticated = request.cookies.has('prelegal-token')
 
   if (PUBLIC_PATHS.includes(pathname)) {
     if (isAuthenticated) {

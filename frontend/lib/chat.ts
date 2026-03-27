@@ -1,3 +1,4 @@
+import { apiFetch } from './api'
 import { DocumentFields } from './types'
 
 export interface ChatMessage {
@@ -11,8 +12,6 @@ export interface ChatResponse {
   document_type: string | null
 }
 
-const API_URL = 'http://localhost:8001/api/chat'
-
 function storageKey(documentType: string | null): string {
   if (!documentType) return 'prelegal-chat-v2-selection'
   const slug = documentType.toLowerCase().replace(/[^a-z0-9]+/g, '-')
@@ -23,9 +22,8 @@ export async function sendMessage(
   messages: ChatMessage[],
   documentType: string | null,
 ): Promise<ChatResponse> {
-  const res = await fetch(API_URL, {
+  const res = await apiFetch('/api/chat', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ messages, document_type: documentType }),
   })
   if (!res.ok) {
